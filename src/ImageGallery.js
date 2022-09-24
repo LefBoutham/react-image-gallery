@@ -25,6 +25,10 @@ import LeftNav from 'src/controls/LeftNav';
 import RightNav from 'src/controls/RightNav';
 import PlayPause from 'src/controls/PlayPause';
 import SwipeWrapper from 'src/SwipeWrapper';
+import ThumbnailsLeftNav from 'src/controls/ThumbnailsLeftNav';
+import ThumbnailsRightNav from 'src/controls/ThumbnailsRightNav';
+import ThumbnailsTopNav from 'src/controls/ThumbnailsTopNav';
+import ThumbnailsBottomNav from 'src/controls/ThumbnailsBottomNav';
 
 const screenChangeEvents = [
   'fullscreenchange',
@@ -60,7 +64,6 @@ class ImageGallery extends React.Component {
       isFullscreen: false,
       isSwipingThumbnail: false,
       isPlaying: false,
-      slideVertically: props.slideVertically
     };
     this.loadedImages = {};
     this.imageGallery = React.createRef();
@@ -174,12 +177,8 @@ class ImageGallery extends React.Component {
     }
 
     if (startIndexUpdated || itemsChanged) {
-      // reset to start index if new items are added
-      // do not transition when new items are added
-      this.setState({
-        currentIndex: startIndex,
-        slideStyle: { transition: 'none' },
-      });
+      // TODO: this should be fix/removed
+      this.setState({ currentIndex: startIndex });
     }
   }
 
@@ -420,10 +419,10 @@ class ImageGallery extends React.Component {
       translateX = this.getTranslateXForTwoSlide(index);
     }
 
-    let translate = slideVertically ? `translate(0, ${translateX}%)` : `translate(${translateX}%, 0)`;
+    let translate = `translate(${translateX}%, 0)`;
 
     if (useTranslate3D) {
-      translate = slideVertically ? `translate3d(0, ${translateX}%, 0)` : `translate3d(${translateX}%, 0, 0)`;
+      translate = `translate3d(${translateX}%, 0, 0)`;
     }
 
     // don't show some slides while transitioning to avoid background transitions
@@ -896,7 +895,7 @@ class ImageGallery extends React.Component {
 
     // If we can't swipe left or right, stay in the current index (noop)
     if ((swipeDirection === -1 && !this.canSlideLeft())
-      || (swipeDirection === 1 && !this.canSlideRight())) {
+        || (swipeDirection === 1 && !this.canSlideRight())) {
       slideTo = currentIndex;
     }
 
@@ -960,7 +959,7 @@ class ImageGallery extends React.Component {
 
   removeResizeObserver() {
     if (this.resizeObserver
-      && this.imageGallerySlideWrapper && this.imageGallerySlideWrapper.current) {
+        && this.imageGallerySlideWrapper && this.imageGallerySlideWrapper.current) {
       this.resizeObserver.unobserve(this.imageGallerySlideWrapper.current);
       this.resizeObserver = null;
     }
@@ -1325,12 +1324,18 @@ class ImageGallery extends React.Component {
       thumbnailPosition,
       renderFullscreenButton,
       renderCustomControls,
+      renderThumbnailsCustomControls,
       renderLeftNav,
       renderRightNav,
+      renderThumbnailsTopNav,
+      renderThumbnailsBottomNav,
+      renderThumbnailsLeftNav,
+      renderThumbnailsRightNav,
       showBullets,
       showFullscreenButton,
       showIndex,
       showThumbnails,
+      showThumbnailsNav,
       showNav,
       showPlayButton,
       renderPlayPauseButton,
@@ -1417,6 +1422,11 @@ class ImageGallery extends React.Component {
       { 'thumbnails-swipe-horizontal': !this.isThumbnailVertical() && !disableThumbnailSwipe },
       { 'thumbnails-swipe-vertical': this.isThumbnailVertical() && !disableThumbnailSwipe },
     );
+    // Add class if thumbnails navigation are showed
+    const thumbnailsLimiterClass = clsx(
+      'image-gallery-thumbnails-limiter',
+      { 'thumbnails-nav-showed': showThumbnailsNav },
+    )
     return (
       <div
         ref={this.imageGallery}
@@ -1434,14 +1444,35 @@ class ImageGallery extends React.Component {
                 onSwiped={!disableThumbnailSwipe && this.handleOnThumbnailSwiped}
               >
                 <div className="image-gallery-thumbnails" ref={this.thumbnailsWrapper} style={this.getThumbnailBarHeight()}>
-                  <nav
-                    ref={this.thumbnails}
-                    className="image-gallery-thumbnails-container"
-                    style={thumbnailStyle}
-                    aria-label="Thumbnail Navigation"
-                  >
-                    {thumbnails}
-                  </nav>
+                  {/* Render thumbnails custom controls */}
+                  {renderThumbnailsCustomControls && renderThumbnailsCustomControls()}
+                  {/* Show thumbnails navigation */}
+                  {
+                    showThumbnailsNav && (thumbnailPosition === 'top' || thumbnailPosition === 'bottom') && (
+                      <React.Fragment>
+                        {renderThumbnailsLeftNav(this.slideLeft, !this.canSlideLeft())}
+                        {renderThumbnailsRightNav(this.slideRight, !this.canSlideRight())}
+                      </React.Fragment>
+                    )
+                  }
+                  {
+                    showThumbnailsNav && (thumbnailPosition === 'left' || thumbnailPosition === 'right') && (
+                      <React.Fragment>
+                        {renderThumbnailsTopNav(this.slideLeft, !this.canSlideLeft())}
+                        {renderThumbnailsBottomNav(this.slideRight, !this.canSlideRight())}
+                      </React.Fragment>
+                    )
+                  }
+                  <div className={thumbnailsLimiterClass}>
+                    <nav
+                      ref={this.thumbnails}
+                      className="image-gallery-thumbnails-container"
+                      style={thumbnailStyle}
+                      aria-label="Thumbnail Navigation"
+                    >
+                      {thumbnails}
+                    </nav>
+                  </div>
                 </div>
               </SwipeWrapper>
             ) : null
@@ -1489,6 +1520,7 @@ ImageGallery.propTypes = {
   showIndex: bool,
   showBullets: bool,
   showThumbnails: bool,
+  showThumbnailsNav: bool,
   showPlayButton: bool,
   showFullscreenButton: bool,
   disableThumbnailScroll: bool,
@@ -1522,8 +1554,13 @@ ImageGallery.propTypes = {
   onThumbnailError: func,
   onThumbnailClick: func,
   renderCustomControls: func,
+  renderThumbnailsCustomControls: func,
   renderLeftNav: func,
   renderRightNav: func,
+  renderThumbnailsTopNav: func,
+  renderThumbnailsBottomNav: func,
+  renderThumbnailsLeftNav: func,
+  renderThumbnailsRightNav: func,
   renderPlayPauseButton: func,
   renderFullscreenButton: func,
   renderItem: func,
@@ -1533,7 +1570,6 @@ ImageGallery.propTypes = {
   useTranslate3D: bool,
   isRTL: bool,
   useWindowKeyDown: bool,
-  slideVertically: bool
 };
 
 ImageGallery.defaultProps = {
@@ -1546,6 +1582,7 @@ ImageGallery.defaultProps = {
   showIndex: false,
   showBullets: false,
   showThumbnails: true,
+  showThumbnailsNav: false,
   showPlayButton: true,
   showFullscreenButton: true,
   disableThumbnailScroll: false,
@@ -1579,6 +1616,7 @@ ImageGallery.defaultProps = {
   onThumbnailError: null,
   onThumbnailClick: null,
   renderCustomControls: null,
+  renderThumbnailsCustomControls: null,
   renderThumbInner: null,
   renderItem: null,
   slideInterval: 3000,
@@ -1590,6 +1628,18 @@ ImageGallery.defaultProps = {
   renderRightNav: (onClick, disabled) => (
     <RightNav onClick={onClick} disabled={disabled} />
   ),
+  renderThumbnailsTopNav: (onClick, disabled) => (
+    <ThumbnailsTopNav onClick={onClick} disabled={disabled} />
+  ),
+  renderThumbnailsBottomNav: (onClick, disabled) => (
+    <ThumbnailsBottomNav onClick={onClick} disabled={disabled} />
+  ),
+  renderThumbnailsLeftNav: (onClick, disabled) => (
+    <ThumbnailsLeftNav onClick={onClick} disabled={disabled} />
+  ),
+  renderThumbnailsRightNav: (onClick, disabled) => (
+    <ThumbnailsRightNav onClick={onClick} disabled={disabled} />
+  ),
   renderPlayPauseButton: (onClick, isPlaying) => (
     <PlayPause onClick={onClick} isPlaying={isPlaying} />
   ),
@@ -1597,7 +1647,6 @@ ImageGallery.defaultProps = {
     <Fullscreen onClick={onClick} isFullscreen={isFullscreen} />
   ),
   useWindowKeyDown: true,
-  slideVertically: false
 };
 
 export default ImageGallery;
