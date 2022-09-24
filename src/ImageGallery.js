@@ -64,6 +64,7 @@ class ImageGallery extends React.Component {
       isFullscreen: false,
       isSwipingThumbnail: false,
       isPlaying: false,
+      slideVertically: props.slideVertically
     };
     this.loadedImages = {};
     this.imageGallery = React.createRef();
@@ -419,10 +420,10 @@ class ImageGallery extends React.Component {
       translateX = this.getTranslateXForTwoSlide(index);
     }
 
-    let translate = `translate(${translateX}%, 0)`;
+    let translate = slideVertically ? `translate(0, ${translateX}%)` : `translate(${translateX}%, 0)`;
 
     if (useTranslate3D) {
-      translate = `translate3d(${translateX}%, 0, 0)`;
+      translate = slideVertically ? `translate3d(0, ${translateX}%, 0)` : `translate3d(${translateX}%, 0, 0)`;
     }
 
     // don't show some slides while transitioning to avoid background transitions
@@ -895,7 +896,7 @@ class ImageGallery extends React.Component {
 
     // If we can't swipe left or right, stay in the current index (noop)
     if ((swipeDirection === -1 && !this.canSlideLeft())
-        || (swipeDirection === 1 && !this.canSlideRight())) {
+      || (swipeDirection === 1 && !this.canSlideRight())) {
       slideTo = currentIndex;
     }
 
@@ -959,7 +960,7 @@ class ImageGallery extends React.Component {
 
   removeResizeObserver() {
     if (this.resizeObserver
-        && this.imageGallerySlideWrapper && this.imageGallerySlideWrapper.current) {
+      && this.imageGallerySlideWrapper && this.imageGallerySlideWrapper.current) {
       this.resizeObserver.unobserve(this.imageGallerySlideWrapper.current);
       this.resizeObserver = null;
     }
@@ -1570,6 +1571,7 @@ ImageGallery.propTypes = {
   useTranslate3D: bool,
   isRTL: bool,
   useWindowKeyDown: bool,
+  slideVertically: bool
 };
 
 ImageGallery.defaultProps = {
@@ -1647,6 +1649,7 @@ ImageGallery.defaultProps = {
     <Fullscreen onClick={onClick} isFullscreen={isFullscreen} />
   ),
   useWindowKeyDown: true,
+  slideVertically: false
 };
 
 export default ImageGallery;
