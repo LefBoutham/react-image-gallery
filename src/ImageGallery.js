@@ -738,7 +738,7 @@ class ImageGallery extends React.Component {
   }
 
   handleSwiping({ event, absX, dir }) {
-    const { disableSwipe, stopPropagation } = this.props;
+    const { disableSwipe, stopPropagation, slideVertically } = this.props;
     const {
       galleryWidth,
       isTransitioning,
@@ -766,7 +766,11 @@ class ImageGallery extends React.Component {
     }
 
     if (!isTransitioning) {
-      const side = dir === RIGHT ? 1 : -1;
+      let side = dir === RIGHT ? 1 : -1;
+
+      if (slideVertically) {
+        side = dir === DOWN ? 1 : -1;
+      }
 
       let currentSlideOffset = (absX / galleryWidth * 100);
       if (Math.abs(currentSlideOffset) >= 100) {
@@ -1148,7 +1152,7 @@ class ImageGallery extends React.Component {
   slideTo(event, direction) {
     const { currentIndex, currentSlideOffset, isTransitioning } = this.state;
     const { items } = this.props;
-    const nextIndex = currentIndex + (direction === 'left' ? -1 : 1)
+    let nextIndex = currentIndex + (direction === 'left' ? -1 : 1)
 
     if (isTransitioning) return;
 
@@ -1479,7 +1483,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "red"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "green"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
