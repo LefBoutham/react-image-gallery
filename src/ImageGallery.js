@@ -737,7 +737,7 @@ class ImageGallery extends React.Component {
     return currentIndex < items.length - 1;
   }
 
-  handleSwiping({ event, absX, dir }) {
+  handleSwiping({ event, absX, absY, dir }) {
     const { disableSwipe, stopPropagation, slideVertically } = this.props;
     const {
       galleryWidth,
@@ -784,6 +784,9 @@ class ImageGallery extends React.Component {
       }
 
       let currentSlideOffset = (absX / galleryWidth * 100);
+
+      console.log('GalleryWidth', galleryWidth)
+      console.log('AbsY', absY)
 
       if (Math.abs(currentSlideOffset) >= 100) {
         currentSlideOffset = 100;
