@@ -60,6 +60,7 @@ class ImageGallery extends React.Component {
       isFullscreen: false,
       isSwipingThumbnail: false,
       isPlaying: false,
+      slideVertically: props.slideVertically
     };
     this.loadedImages = {};
     this.imageGallery = React.createRef();
@@ -375,7 +376,7 @@ class ImageGallery extends React.Component {
     return alignment;
   }
 
-  getTranslateXForTwoSlide(index) {
+  getTranslateDistanceForTwoSlide(index) {
     // For taking care of infinite swipe when there are only two slides
     const { currentIndex, currentSlideOffset, previousIndex } = this.state;
     const indexChanged = currentIndex !== previousIndex;
@@ -384,11 +385,11 @@ class ImageGallery extends React.Component {
     const firstSlideIsNextSlide = index === 0 && currentIndex === 1;
     const secondSlideIsNextSlide = index === 1 && currentIndex === 0;
     const swipingEnded = currentSlideOffset === 0;
-    const baseTranslateX = -100 * currentIndex;
-    let translateX = baseTranslateX + (index * 100) + currentSlideOffset;
+    const baseTranslateDistance = -100 * currentIndex;
+    let translateDistance = baseTranslateDistance + (index * 100) + currentSlideOffset;
 
     // keep track of user swiping direction
-    // important to understand how to translateX based on last direction
+    // important to understand how to translateDistance based on last direction
     if (currentSlideOffset > 0) {
       this.direction = 'left';
     } else if (currentSlideOffset < 0) {
@@ -399,30 +400,30 @@ class ImageGallery extends React.Component {
     // when swiping between two slides make sure the next and prev slides
     // are on both left and right
     if (secondSlideIsNextSlide && currentSlideOffset > 0) { // swiping right
-      translateX = -100 + currentSlideOffset;
+      translateDistance = -100 + currentSlideOffset;
     }
     if (firstSlideIsNextSlide && currentSlideOffset < 0) { // swiping left
-      translateX = 100 + currentSlideOffset;
+      translateDistance = 100 + currentSlideOffset;
     }
 
     if (indexChanged) {
       // when indexChanged move the slide to the correct side
       if (firstSlideWasPrevSlide && swipingEnded && this.direction === 'left') {
-        translateX = 100;
+        translateDistance = 100;
       } else if (secondSlideWasPrevSlide && swipingEnded && this.direction === 'right') {
-        translateX = -100;
+        translateDistance = -100;
       }
     } else {
       // keep the slide on the correct side if the swipe was not successful
       if (secondSlideIsNextSlide && swipingEnded && this.direction === 'left') {
-        translateX = -100;
+        translateDistance = -100;
       }
       if (firstSlideIsNextSlide && swipingEnded && this.direction === 'right') {
-        translateX = 100;
+        translateDistance = 100;
       }
     }
 
-    return translateX;
+    return translateDistance;
   }
 
   getThumbnailBarHeight() {
@@ -434,41 +435,41 @@ class ImageGallery extends React.Component {
   }
 
   getSlideStyle(index) {
-    const { currentIndex, currentSlideOffset, slideStyle } = this.state;
+    const { currentIndex, currentSlideOffset, slideStyle, slideVertically } = this.state;
     const {
       infinite,
       items,
       useTranslate3D,
       isRTL,
     } = this.props;
-    const baseTranslateX = -100 * currentIndex;
+    const baseTranslateDistance = -100 * currentIndex;
     const totalSlides = items.length - 1;
 
     // calculates where the other slides belong based on currentIndex
     // if it is RTL the base line should be reversed
-    let translateX = (baseTranslateX + (index * 100)) * (isRTL ? -1 : 1) + currentSlideOffset;
+    let translateDistance = (baseTranslateDistance + (index * 100)) * (isRTL ? -1 : 1) + currentSlideOffset;
 
     if (infinite && items.length > 2) {
       if (currentIndex === 0 && index === totalSlides) {
         // make the last slide the slide before the first
         // if it is RTL the base line should be reversed
-        translateX = -100 * (isRTL ? -1 : 1) + currentSlideOffset;
+        translateDistance = -100 * (isRTL ? -1 : 1) + currentSlideOffset;
       } else if (currentIndex === totalSlides && index === 0) {
         // make the first slide the slide after the last
         // if it is RTL the base line should be reversed
-        translateX = 100 * (isRTL ? -1 : 1) + currentSlideOffset;
+        translateDistance = 100 * (isRTL ? -1 : 1) + currentSlideOffset;
       }
     }
 
     // Special case when there are only 2 items with infinite on
     if (infinite && items.length === 2) {
-      translateX = this.getTranslateXForTwoSlide(index);
+      translateDistance = this.getTranslateDistanceForTwoSlide(index);
     }
 
-    let translate = `translate(${translateX}%, 0)`;
+    let translate = slideVertically ? `translate(0, ${translateDistance}%)` : `translate(${translateDistance}%, 0)`;
 
     if (useTranslate3D) {
-      translate = `translate3d(${translateX}%, 0, 0)`;
+      translate =  slideVertically ? `translate3d(0, ${translateDistance}%, 0)` : `translate3d(${translateDistance}%, 0, 0)`;
     }
 
     // don't show some slides while transitioning to avoid background transitions
@@ -737,7 +738,7 @@ class ImageGallery extends React.Component {
   }
 
   handleSwiping({ event, absX, dir }) {
-    const { disableSwipe, stopPropagation } = this.props;
+    const { disableSwipe, stopPropagation, slideVertically } = this.props;
     const {
       galleryWidth,
       isTransitioning,
@@ -765,7 +766,12 @@ class ImageGallery extends React.Component {
     }
 
     if (!isTransitioning) {
-      const side = dir === RIGHT ? 1 : -1;
+      let side = dir === RIGHT ? 1 : -1;
+
+      // If vertical slide active, use DOWN instead
+      if (slideVertically) {
+        side = dir === DOWN ? 1 : -1
+      }
 
       let currentSlideOffset = (absX / galleryWidth * 100);
       if (Math.abs(currentSlideOffset) >= 100) {
@@ -1596,6 +1602,7 @@ ImageGallery.propTypes = {
   useTranslate3D: bool,
   isRTL: bool,
   useWindowKeyDown: bool,
+  slideVertically: bool
 };
 
 ImageGallery.defaultProps = {
