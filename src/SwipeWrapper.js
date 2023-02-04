@@ -4,6 +4,7 @@ import {
   node,
   number,
   func,
+  bool
 } from 'prop-types';
 import { useSwipeable } from 'react-swipeable';
 
@@ -13,11 +14,13 @@ const SwipeWrapper = ({
   delta,
   onSwiping,
   onSwiped,
+  preventScrollOnSwipe,
 }) => {
   const swipeHandlers = useSwipeable({
     delta,
     onSwiping,
     onSwiped,
+    preventScrollOnSwipe,
   });
   return (
     <div {...swipeHandlers} className={className}>
@@ -32,6 +35,7 @@ SwipeWrapper.propTypes = {
   delta: number,
   onSwiped: func,
   onSwiping: func,
+  preventScrollOnSwipe: bool,
 };
 
 SwipeWrapper.defaultProps = {
@@ -39,6 +43,7 @@ SwipeWrapper.defaultProps = {
   delta: 0,
   onSwiping: () => {},
   onSwiped: () => {},
+  preventScrollOnSwipe: false
 };
 
 export default SwipeWrapper;
