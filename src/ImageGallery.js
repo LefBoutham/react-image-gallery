@@ -1512,7 +1512,7 @@ class ImageGallery extends React.Component {
           }
           {(thumbnailPosition === 'top' || thumbnailPosition === 'left') && slideWrapper}
         </div>
-
+          testing
       </div>
     );
   }
