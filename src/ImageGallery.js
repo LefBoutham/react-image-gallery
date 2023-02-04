@@ -746,13 +746,14 @@ class ImageGallery extends React.Component {
       swipingLeftRight,
     } = this.state;
 
+    console.log('Direction', dir)
+    console.log('Slide vertically', slideVertically)
+
     // if the initial swiping is up/down prevent moving the slides until swipe ends
     if ((dir === UP || dir === DOWN || swipingUpDown) && !swipingLeftRight) {
       if (!swipingUpDown) {
         this.setState({ swipingUpDown: true });
       }
-
-      if (!slideVertically) return
     }
 
     if ((dir === LEFT || dir === RIGHT) && !swipingLeftRight) {
@@ -1489,7 +1490,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "green"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "yellow"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
