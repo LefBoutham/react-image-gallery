@@ -749,6 +749,7 @@ class ImageGallery extends React.Component {
 
     console.log('Direction', dir)
     console.log('Slide vertically', slideVertically)
+    console.log('JEEE')
 
     // if the initial swiping is up/down prevent moving the slides until swipe ends
     if ((dir === UP || dir === DOWN || swipingUpDown) && !swipingLeftRight) {
@@ -760,6 +761,8 @@ class ImageGallery extends React.Component {
     if ((dir === LEFT || dir === RIGHT) && !swipingLeftRight) {
       this.setState({ swipingLeftRight: true });
 
+      console.log('This shouldnt get logged')
+
       if (slideVertically) return
     }
 
@@ -770,13 +773,18 @@ class ImageGallery extends React.Component {
     }
 
     if (!isTransitioning) {
-      let side = dir === RIGHT ? 1 : -1;
+      let side = 0;
 
       if (slideVertically) {
-        side = dir === DOWN ? 1 : -1;
+        if (dir === DOWN) side = 1;
+        if (dir === UP) side = -1;
+      } else {
+        if (dir === RIGHT) side = 1;
+        if (dir === LEFT) side = -1;
       }
 
       let currentSlideOffset = (absX / galleryWidth * 100);
+
       if (Math.abs(currentSlideOffset) >= 100) {
         currentSlideOffset = 100;
       }
