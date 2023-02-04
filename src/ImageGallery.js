@@ -742,6 +742,7 @@ class ImageGallery extends React.Component {
     const {
       galleryWidth,
       isTransitioning,
+      swipingTransitionDuration,
       swipingUpDown,
       swipingLeftRight,
     } = this.state;
@@ -764,7 +765,6 @@ class ImageGallery extends React.Component {
 
     if (disableSwipe) return;
 
-    const { swipingTransitionDuration } = this.props;
     if (stopPropagation) {
       event.preventDefault();
     }
@@ -1433,7 +1433,7 @@ class ImageGallery extends React.Component {
                 delta={0}
                 onSwiping={this.handleSwiping}
                 onSwiped={this.handleOnSwiped}
-                preventScrollOnSwope={this.slideVertically}
+                preventScrollOnSwipe={this.slideVertically}
               >
                 <div className="image-gallery-slides">
                   {slides}
@@ -1490,7 +1490,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "yellow"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "blue"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
