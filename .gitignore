@@ -4,8 +4,7 @@ npm-debug.log
 .notes
 .idea
 
-build/
+
 example/example.js
 example/example.js.map
 demo/
-styles/css/
