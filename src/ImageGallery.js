@@ -757,6 +757,8 @@ class ImageGallery extends React.Component {
 
     if ((dir === LEFT || dir === RIGHT) && !swipingLeftRight) {
       this.setState({ swipingLeftRight: true });
+
+      if (slideVertically) return
     }
 
     if (disableSwipe) return;
@@ -1487,7 +1489,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "orange"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "green"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
