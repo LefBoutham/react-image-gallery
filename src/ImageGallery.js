@@ -435,7 +435,7 @@ class ImageGallery extends React.Component {
   }
 
   getSlideStyle(index) {
-    const { currentIndex, currentSlideOffset, slideStyle, slideVertically } = this.state;
+    const { currentIndex, currentSlideOffset, slideStyle } = this.state;
     const {
       infinite,
       items,
@@ -466,10 +466,10 @@ class ImageGallery extends React.Component {
       translateValue = this.getTranslateXForTwoSlide(index);
     }
 
-    let translate = slideVertically ? `translate(0, ${translateValue}%)` : `translate(${translateValue}%, 0)`;
+    let translate = `translate(${translateValue}%, 0)`;
 
     if (useTranslate3D) {
-      translate =  slideVertically ? `translate3d(0, ${translateValue}%, 0)` : `translate3d(${translateValue}%, 0, 0)`;
+      translate = `translate3d(${translateValue}%, 0, 0)`;
     }
 
     // don't show some slides while transitioning to avoid background transitions
