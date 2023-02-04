@@ -783,10 +783,12 @@ class ImageGallery extends React.Component {
         if (dir === LEFT) side = -1;
       }
 
-      let currentSlideOffset = (absX / galleryWidth * 100);
+      let currentSlideOffset = slideVertically
+      ? (absY / galleryWidth * 100)
+      : (absX / galleryWidth * 100);
 
       console.log('GalleryWidth', galleryWidth)
-      console.log('AbsY', absY)
+      console.log('AbsY NEW', absY)
 
       if (Math.abs(currentSlideOffset) >= 100) {
         currentSlideOffset = 100;
