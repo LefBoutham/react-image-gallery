@@ -1478,6 +1478,8 @@ class ImageGallery extends React.Component {
       { 'thumbnails-swipe-vertical': this.isThumbnailVertical() && !disableThumbnailSwipe },
     );
     return (
+      <>
+      <div style={{width: "100%", height: "50px", background: "red"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
@@ -1512,8 +1514,8 @@ class ImageGallery extends React.Component {
           }
           {(thumbnailPosition === 'top' || thumbnailPosition === 'left') && slideWrapper}
         </div>
-          testing
       </div>
+      </>
     );
   }
 }
