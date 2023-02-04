@@ -920,7 +920,7 @@ class ImageGallery extends React.Component {
   }
 
   handleOnSwiped({ event, dir, velocity }) {
-    const { disableSwipe, stopPropagation, flickThreshold } = this.props;
+    const { disableSwipe, stopPropagation, flickThreshold, slideVertically } = this.props;
 
     if (disableSwipe) return;
 
@@ -928,8 +928,10 @@ class ImageGallery extends React.Component {
     if (stopPropagation) event.stopPropagation();
     this.resetSwipingDirection();
 
-    // if it is RTL the direction is reversed
-    const swipeDirection = (dir === LEFT ? 1 : -1) * (isRTL ? -1 : 1);
+    // if it is RTL the direction is reversed, except on vertical slide
+    let swipeDirection = (dir === LEFT ? 1 : -1) * (isRTL ? -1 : 1);
+    if (slideVertically) swipeDirection = (dir === UP ? 1 : -1);
+
     const isSwipeUpOrDown = dir === UP || dir === DOWN;
     const isLeftRightFlick = (velocity > flickThreshold) && !isSwipeUpOrDown;
     this.handleOnSwipedTo(swipeDirection, isLeftRightFlick);
@@ -1483,7 +1485,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "green"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "blue"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
