@@ -1446,7 +1446,7 @@ class ImageGallery extends React.Component {
                 delta={0}
                 onSwiping={this.handleSwiping}
                 onSwiped={this.handleOnSwiped}
-                preventScrollOnSwipe={this.slideVertically}
+                preventScrollOnSwipe={true}
               >
                 <div className="image-gallery-slides">
                   {slides}
@@ -1503,7 +1503,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "blue"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "green"}}>Testing</div>
       <div
         ref={this.imageGallery}
         className={igClass}
