@@ -973,10 +973,10 @@ class ImageGallery extends React.Component {
 
   handleTouchMove(event) {
     const { swipingLeftRight } = this.state;
-    // if (swipingLeftRight) {
+     if (swipingLeftRight) {
       // prevent background scrolling up and down while swiping left and right
       event.preventDefault();
-    // }
+     }
     console.log('SWIPED')
   }
 
