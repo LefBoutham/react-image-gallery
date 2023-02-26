@@ -1444,9 +1444,11 @@ class ImageGallery extends React.Component {
                 onSwiping={this.handleSwiping}
                 onSwiped={this.handleOnSwiped}
                 preventScrollOnSwipe={true}
-                style={{ touchAction: this.slideVertically ? 'none' : 'unset' }}
               >
-                <div className="image-gallery-slides">
+                <div 
+                  className="image-gallery-slides"         
+                  style={{ touchAction: 'none' }}
+                >
                   {slides}
                 </div>
               </SwipeWrapper>
@@ -1506,7 +1508,6 @@ class ImageGallery extends React.Component {
         ref={this.imageGallery}
         className={igClass}
         aria-live="polite"
-        style={{ touchAction: this.slideVertically ? 'none' : 'unset' }}
       >
         <div 
         className={igContentClass}
