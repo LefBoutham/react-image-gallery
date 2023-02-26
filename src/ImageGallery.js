@@ -973,11 +973,8 @@ class ImageGallery extends React.Component {
 
   handleTouchMove(event) {
     const { swipingLeftRight } = this.state;
-     if (swipingLeftRight) {
-      // prevent background scrolling up and down while swiping left and right
-      event.preventDefault();
-     }
-    console.log('SWIPED')
+
+    console.log('SWIPED 1')
   }
 
   handleMouseDown() {
@@ -1503,7 +1500,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "yellow"}}>Testing yoo</div>
+      <div style={{width: "100%", height: "50px", background: "blue"}}>Testing yoo</div>
       <div
         ref={this.imageGallery}
         className={igClass}
