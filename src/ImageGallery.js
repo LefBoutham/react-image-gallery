@@ -749,7 +749,6 @@ class ImageGallery extends React.Component {
 
     console.log('Direction', dir)
     console.log('Slide vertically', slideVertically)
-    console.log('JEEE')
 
     // if the initial swiping is up/down prevent moving the slides until swipe ends
     if ((dir === UP || dir === DOWN || swipingUpDown) && !swipingLeftRight) {
@@ -776,11 +775,11 @@ class ImageGallery extends React.Component {
       let side = 0;
 
       if (slideVertically) {
-        if (dir === DOWN) side = 1;
-        if (dir === UP) side = -1;
+        if (dir === DOWN) side = 2;
+        if (dir === UP) side = -2;
       } else {
-        if (dir === RIGHT) side = 1;
-        if (dir === LEFT) side = -1;
+        if (dir === RIGHT) side = 2;
+        if (dir === LEFT) side = -2;
       }
 
       let currentSlideOffset = slideVertically
@@ -974,10 +973,10 @@ class ImageGallery extends React.Component {
 
   handleTouchMove(event) {
     const { swipingLeftRight } = this.state;
-    if (swipingLeftRight) {
+    // if (swipingLeftRight) {
       // prevent background scrolling up and down while swiping left and right
       event.preventDefault();
-    }
+    // }
   }
 
   handleMouseDown() {
