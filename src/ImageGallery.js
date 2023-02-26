@@ -1501,11 +1501,12 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "orange"}}>Testing yoo</div>
+      <div style={{width: "100%", height: "50px", background: "lightblue"}}>Testing yoo</div>
       <div
         ref={this.imageGallery}
         className={igClass}
         aria-live="polite"
+        style={{ touchAction: this.slideVertically ? 'none' : 'unset' }}
       >
         <div 
         className={igContentClass}
