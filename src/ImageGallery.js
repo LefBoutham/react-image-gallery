@@ -1503,7 +1503,7 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "yellow"}}>Testing</div>
+      <div style={{width: "100%", height: "50px", background: "yellow"}}>Testing yoo</div>
       <div
         ref={this.imageGallery}
         className={igClass}
