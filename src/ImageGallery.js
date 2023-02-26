@@ -1444,6 +1444,7 @@ class ImageGallery extends React.Component {
                 onSwiping={this.handleSwiping}
                 onSwiped={this.handleOnSwiped}
                 preventScrollOnSwipe={true}
+                style={{ touchAction: this.slideVertically ? 'none' : 'unset' }}
               >
                 <div className="image-gallery-slides">
                   {slides}
@@ -1500,13 +1501,15 @@ class ImageGallery extends React.Component {
     );
     return (
       <>
-      <div style={{width: "100%", height: "50px", background: "blue"}}>Testing yoo</div>
+      <div style={{width: "100%", height: "50px", background: "orange"}}>Testing yoo</div>
       <div
         ref={this.imageGallery}
         className={igClass}
         aria-live="polite"
       >
-        <div className={igContentClass}>
+        <div 
+        className={igContentClass}
+        >
           {(thumbnailPosition === 'bottom' || thumbnailPosition === 'right') && slideWrapper}
           {
             showThumbnails && thumbnails.length > 0 ? (
